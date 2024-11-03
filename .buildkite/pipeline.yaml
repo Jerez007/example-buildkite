@@ -1,0 +1,31 @@
+steps:
+  - label: ":golang: Build"
+    key: "build_go_app"
+    command: "go build -o hello/hello hello/hello.go"
+    plugins:
+      - artifacts#v1.9.3:
+          upload: "hello/hello"  # Upload the compiled binary
+      - docker#v5.9.0:
+          image: "golang:1.18.0"
+          
+  - block: "Enter Your Name"
+    key: "enter_name"
+    fields:
+      - text: "Your name"
+        key: "name"          
+
+  - label: "Run Go App"
+    key: "run_go_app"
+    depends_on:
+      - build_go_app
+      - enter_name
+    plugins:
+      - docker#v5.11.0:
+          image: "golang:1.18.0"  # Use the golang image again
+          mount-buildkite-agent: true
+      - artifacts#v1.9.3:
+          download: "hello/hello"  # Upload the compiled binary
+    command: |
+      chmod +x hello/hello
+      hello/hello "$(buildkite-agent meta-data get name)"
+        
