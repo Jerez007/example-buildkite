@@ -8,6 +8,9 @@ steps:
       - docker#v5.9.0:
           image: "golang:1.18.0"
 
+  - label: "Print Analytics Token"
+    command: "echo $BUILDKITE_ANALYTICS_TOKEN"
+
   - block: "Enter Your Name"
     key: "enter_name"
     fields:
