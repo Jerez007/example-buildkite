@@ -24,14 +24,18 @@ steps:
     plugins:
       - docker#v5.11.0:
           image: "golang:1.18.0"
-          mount-buildkite-agent: true
+      - artifacts#v1.9.3:
+      upload: "junit.xml" 
     command: |
       go install gotest.tools/gotestsum@latest
       gotestsum --junitfile junit.xml ./...
-      buildkite-agent artifact upload junit.xml
+   
 
   - label: ":buildkite: Upload Test Analytics"
     key: "upload_test_analytics"
+    plugins:
+      - artifacts#v1.9.3:
+          download: "junit.xml" # Download the JUnit XML artifact
     depends_on:
       - run_tests
     command: |
