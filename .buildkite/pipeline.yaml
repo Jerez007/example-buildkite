@@ -9,13 +9,7 @@ steps:
           image: "golang:1.18.0"
 
   - label: "Print Analytics Token"
-    command: "echo $BUILDKITE_ANALYTICS_TOKEN"
-
-  - block: "Enter Your Name"
-    key: "enter_name"
-    fields:
-      - text: "Your name"
-        key: "name"
+    command: "echo $BUILDKITE_ANALYTICS_TOKEN"  # BUILDKITE_AGENT_PIPELINE_UPLOAD_REJECT_SECRETS will redact this information
 
   - label: ":test_tube: Run Tests"
     key: "run_tests"
@@ -54,6 +48,14 @@ steps:
         -F "run_env[message]=$BUILDKITE_MESSAGE" \
         -F "run_env[url]=$BUILDKITE_BUILD_URL" \
         https://analytics-api.buildkite.com/v1/uploads
+
+
+  - block: "Enter Your Name"
+    key: "enter_name"
+    fields:
+      - text: "Your name"
+        key: "name"
+
 
   - label: "Run Go App"
     key: "run_go_app"
